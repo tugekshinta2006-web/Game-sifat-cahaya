@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)file:///Users/user/Downloads/game_drag_drop_sifat_cahaya_html-2.html -->
+<html lang="id"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Game Sifat Cahaya - Drag &amp; Drop (Gaya Kartun SD)</title>
+  <style>
+    :root{--bg:#e8f7ff;--panel:#ffffff;--accent:#ffb703;--accent2:#219ebc;--good:#1aa051;--bad:#e03b3b}
+    *{box-sizing:border-box}
+    body{font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;background:linear-gradient(180deg,#dff6ff,#e8f7ff);margin:0;padding:18px;color:#0b2545}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    h1{font-size:22px;margin:0}
+    .controls{display:flex;gap:8px}
+    button{background:var(--accent);color:#0b2545;border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700}
+    button.secondary{background:#fff;color:var(--accent);border:2px solid var(--accent)}
+    .game{display:flex;gap:16px;align-items:flex-start}
+    .left{flex:1}
+    .right{width:480px}
+    .bank{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;background:linear-gradient(180deg,#fff, #f8feff);border-radius:14px;min-height:420px}
+    .card{background:var(--panel);padding:8px;border-radius:12px;box-shadow:0 6px 14px rgba(11,37,69,0.06);display:flex;flex-direction:column;gap:8px;align-items:center;border:2px dashed transparent;cursor:grab;transition:transform .12s}
+    .card:active{cursor:grabbing}
+    .card:hover{transform:translateY(-6px)}
+    .thumb{width:88px;height:88px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f3fbff);}
+    .label{font-weight:800;font-size:13px;text-align:center}
+    .desc{font-size:12px;color:#51617a}
+    .targets{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .target{min-height:92px;background:linear-gradient(180deg,#fff,#f7fff7);padding:10px;border-radius:12px;border:2px dashed rgba(33,158,188,0.12);display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+    .target h3{margin:0;font-size:15px}
+    .slot{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .placed{display:flex;gap:6px;align-items:center;padding:6px;border-radius:8px;background:#fbfcff;box-shadow:0 2px 6px rgba(11,37,69,0.04)}
+    .badge{font-size:11px;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid #eef5ff}
+    .info{background:#fff;padding:12px;border-radius:12px;box-shadow:0 6px 14px rgba(11,37,69,0.05)}
+    .score{font-weight:900;color:var(--good)}
+    .wrong{color:var(--bad)}
+    .celebrate{animation:pop .6s ease}
+    @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+
+    /* small animation for svg icons */
+    .wiggle{transition:transform .18s}
+    .wiggle.ok{transform:rotate(-6deg) scale(1.05)}
+    .wiggle.wrong{transform:translateX(-6px)}
+
+    @media (max-width:1100px){.game{flex-direction:column}.right{width:100%}.bank{grid-template-columns:repeat(3,1fr)}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Game: Sifat Cahaya — Drag &amp; Drop</h1>
+    <div class="controls">
+      <button id="shuffleBtn">Acak</button>
+      <button id="resetBtn" class="secondary">Ulangi</button>
+    </div>
+  </header>
+
+  <main class="game">
+    <section class="left">
+      <div class="info">
+        <p style="margin:0"><strong>Petunjuk:</strong> Seret gambar ke kotak sifat cahaya yang sesuai. Ada <strong>6</strong> kotak — setiap kotak menerima 2 gambar.</p>
+      </div>
+
+      <h2 style="font-size:16px;margin-top:12px">Kartu Gambar (Seret dari sini)</h2>
+      <div id="bank" class="bank" aria-label="Kumpulan gambar contoh"><div class="card" draggable="true" id="dipantulkan_1" data-prop="dipantulkan">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="26" y="18" width="8" height="34" rx="4" fill="#d1c7ff" transform="rotate(-18 30 30)"></rect>
+            <ellipse cx="38" cy="18" rx="10" ry="12" fill="#fff5d6" stroke="#f7e7b9"></ellipse>
+          </svg></div>
+        <div class="label">Sendok</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="merambat_0" data-prop="merambat">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="34" width="28" height="14" rx="6" fill="#ffb703"></rect>
+            <rect x="36" y="28" width="20" height="20" rx="4" fill="#ffdca3" transform="rotate(-18 46 38)"></rect>
+            <g opacity="0.8"><polygon points="44,26 68,12 68,40" fill="#fff199"></polygon></g>
+            <circle cx="22" cy="41" r="3" fill="#8a5a00"></circle>
+          </svg></div>
+        <div class="label">Senter</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="dipantulkan_0" data-prop="dipantulkan">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="10" width="40" height="44" rx="6" fill="#e6f7ff" stroke="#9ed3ec" stroke-width="3"></rect>
+            <line x1="20" y1="14" x2="48" y2="42" stroke="#bfe9ff" stroke-width="3"></line>
+          </svg></div>
+        <div class="label">Cermin datar</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="tidakmenembus_0" data-prop="tidakmenembus">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="22" width="44" height="28" rx="4" fill="#f0c27b" stroke="#d49a3b"></rect>
+            <line x1="14" y1="28" x2="58" y2="28" stroke="#d49a3b" stroke-width="2"></line>
+          </svg></div>
+        <div class="label">Kardus</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="tidakmenembus_1" data-prop="tidakmenembus">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="24" width="40" height="24" rx="4" fill="#d9a066" stroke="#b77a3f"></rect>
+            <path d="M22 30 L50 30" stroke="#b77a3f"></path>
+          </svg></div>
+        <div class="label">Papan kayu</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="diuraikan_1" data-prop="diuraikan">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="18,50 36,18 54,50" fill="#ffdca3" stroke="#ffb703"></polygon>
+            <line x1="36" y1="18" x2="60" y2="34" stroke="#cfe9ff" stroke-width="4"></line>
+            <g stroke-width="4"><line x1="60" y1="34" x2="66" y2="26" stroke="#ffb3c6"></line><line x1="60" y1="34" x2="66" y2="34" stroke="#ffd6a5"></line><line x1="60" y1="34" x2="66" y2="42" stroke="#cfe9ff"></line></g>
+          </svg></div>
+        <div class="label">Prisma</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="merambat_1" data-prop="merambat">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="30" r="12" fill="#ffd166"></circle>
+            <g stroke="#ffd166" stroke-width="3" stroke-linecap="round">
+              <line x1="36" y1="4" x2="36" y2="14"></line>
+              <line x1="36" y1="46" x2="36" y2="60"></line>
+              <line x1="4" y1="30" x2="16" y2="30"></line>
+              <line x1="56" y1="30" x2="68" y2="30"></line>
+            </g>
+            <circle cx="30" cy="28" r="1.6" fill="#6b2e00"></circle><circle cx="42" cy="28" r="1.6" fill="#6b2e00"></circle>
+            <path d="M30 36 Q36 40 42 36" stroke="#6b2e00" stroke-width="2" fill="none" stroke-linecap="round"></path>
+          </svg></div>
+        <div class="label">Cahaya masuk celah</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="dibiaskan_1" data-prop="dibiaskan">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="18" y="44" width="36" height="18" rx="6" fill="#cbe7ff"></rect>
+            <rect x="22" y="22" width="28" height="6" rx="3" fill="#ffd6a5" transform="rotate(-12 36 25)"></rect>
+            <rect x="22" y="28" width="4" height="14" fill="#6b2e00" transform="rotate(-12 24 35)"></rect>
+          </svg></div>
+        <div class="label">Pensil dalam air</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="dibiaskan_0" data-prop="dibiaskan">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="18" width="36" height="6" rx="3" fill="#ffd6e0" transform="rotate(-6 38 21)"></rect>
+            <rect x="26" y="30" width="20" height="26" rx="6" fill="#cfe9ff"></rect>
+            <rect x="36" y="18" width="6" height="18" rx="3" fill="#ff7aa2" transform="rotate(-6 39 27)"></rect>
+          </svg></div>
+        <div class="label">Sedotan patah</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="menembus_1" data-prop="menembus">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="20" width="40" height="28" rx="6" fill="#fff6e6" stroke="#ffdca3" stroke-width="2"></rect>
+            <path d="M18 24 Q36 14 54 24" stroke="#ffe9c6" stroke-width="2" fill="none"></path>
+          </svg></div>
+        <div class="label">Plastik mika</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="menembus_0" data-prop="menembus">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="18" width="44" height="36" rx="6" fill="#e9fbff" stroke="#bfe9ff" stroke-width="3"></rect>
+            <line x1="18" y1="22" x2="44" y2="48" stroke="#d7f0ff" stroke-width="3"></line>
+          </svg></div>
+        <div class="label">Kaca jendela</div>
+        <div class="desc">(seret ke kotak)</div></div><div class="card" draggable="true" id="diuraikan_0" data-prop="diuraikan">
+        <div class="thumb">
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="36" r="22" fill="url(#grad)" stroke="#ffc" stroke-width="2"></circle>
+            <circle cx="36" cy="36" r="6" fill="#fff"></circle>
+            <defs><lineargradient id="grad" x1="0" x2="1"><stop offset="0%" stop-color="#ffb3c6"></stop><stop offset="25%" stop-color="#ffd6a5"></stop><stop offset="50%" stop-color="#cfe9ff"></stop><stop offset="75%" stop-color="#bde4ff"></stop><stop offset="100%" stop-color="#d8b3ff"></stop></lineargradient></defs>
+          </svg></div>
+        <div class="label">CD pelangi</div>
+        <div class="desc">(seret ke kotak)</div></div></div>
+    </section>
+
+    <aside class="right">
+      <div class="info">
+        <h2 style="font-size:16px">Kotak Sifat Cahaya</h2>
+        <div class="targets" id="targets"><div class="target" id="target_merambat">
+        <h3>Merambat Lurus</h3>
+        <div class="slot" aria-label="slot for Merambat Lurus"></div></div><div class="target" id="target_dipantulkan">
+        <h3>Dipantulkan</h3>
+        <div class="slot" aria-label="slot for Dipantulkan"></div></div><div class="target" id="target_dibiaskan">
+        <h3>Dibiaskan</h3>
+        <div class="slot" aria-label="slot for Dibiaskan"></div></div><div class="target" id="target_menembus">
+        <h3>Menembus Benda Bening</h3>
+        <div class="slot" aria-label="slot for Menembus Benda Bening"></div></div><div class="target" id="target_tidakmenembus">
+        <h3>Tidak Menembus Benda Gelap</h3>
+        <div class="slot" aria-label="slot for Tidak Menembus Benda Gelap"></div></div><div class="target" id="target_diuraikan">
+        <h3>Diuraikan (Spektrum)</h3>
+        <div class="slot" aria-label="slot for Diuraikan (Spektrum)"></div></div></div>
+        <div style="margin-top:10px;display:flex;gap:10px;align-items:center;justify-content:space-between">
+          <div>Skor: <span id="score">0</span> / 12</div>
+          <div id="feedback"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;text-align:center">
+        <button id="checkBtn">Periksa Semua</button>
+      </div>
+
+    </aside>
+  </main>
+
+  <footer style="margin-top:14px;text-align:center;font-size:13px;color:#0b2545">
+    <small>Versi: Laptop — ukuran layar penuh. Gaya: kartun buku SD, warna cerah.</small>
+  </footer>
+
+  <script>
+    // Data: 6 sifat x 2 contoh (gambar diganti SVG inline melalui fungsi createSVG)
+    const properties = [
+      {id:'merambat', title:'Merambat Lurus', examples:[{name:'Senter',icon:'senter'},{name:'Cahaya masuk celah',icon:'matahari'}]},
+      {id:'dipantulkan', title:'Dipantulkan', examples:[{name:'Cermin datar',icon:'cermin'},{name:'Sendok',icon:'sendok'}]},
+      {id:'dibiaskan', title:'Dibiaskan', examples:[{name:'Sedotan patah',icon:'sedotan'},{name:'Pensil dalam air',icon:'pensil_air'}]},
+      {id:'menembus', title:'Menembus Benda Bening', examples:[{name:'Kaca jendela',icon:'kaca'},{name:'Plastik mika',icon:'plastik'}]},
+      {id:'tidakmenembus', title:'Tidak Menembus Benda Gelap', examples:[{name:'Kardus',icon:'kardus'},{name:'Papan kayu',icon:'kayu'}]},
+      {id:'diuraikan', title:'Diuraikan (Spektrum)', examples:[{name:'CD pelangi',icon:'cd'},{name:'Prisma',icon:'prisma'}]}
+    ];
+
+    // create flattened cards
+    let cards = [];
+    properties.forEach(prop=>{
+      prop.examples.forEach((ex, idx)=>{
+        cards.push({id: prop.id + '_' + idx, prop:prop.id, title:ex.name, icon:ex.icon});
+      });
+    });
+
+    const bank = document.getElementById('bank');
+    const targetsEl = document.getElementById('targets');
+    const scoreEl = document.getElementById('score');
+    const feedback = document.getElementById('feedback');
+
+    function createSVG(name){
+      // return small SVG string, cartoon style. Keep simple shapes.
+      switch(name){
+        case 'senter': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="34" width="28" height="14" rx="6" fill="#ffb703" />
+            <rect x="36" y="28" width="20" height="20" rx="4" fill="#ffdca3" transform="rotate(-18 46 38)" />
+            <g opacity="0.8"><polygon points="44,26 68,12 68,40" fill="#fff199"/></g>
+            <circle cx="22" cy="41" r="3" fill="#8a5a00"/>
+          </svg>`;
+        case 'matahari': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="30" r="12" fill="#ffd166" />
+            <g stroke="#ffd166" stroke-width="3" stroke-linecap="round">
+              <line x1="36" y1="4" x2="36" y2="14" />
+              <line x1="36" y1="46" x2="36" y2="60" />
+              <line x1="4" y1="30" x2="16" y2="30" />
+              <line x1="56" y1="30" x2="68" y2="30" />
+            </g>
+            <circle cx="30" cy="28" r="1.6" fill="#6b2e00"/><circle cx="42" cy="28" r="1.6" fill="#6b2e00"/>
+            <path d="M30 36 Q36 40 42 36" stroke="#6b2e00" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>`;
+        case 'cermin': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="10" width="40" height="44" rx="6" fill="#e6f7ff" stroke="#9ed3ec" stroke-width="3"/>
+            <line x1="20" y1="14" x2="48" y2="42" stroke="#bfe9ff" stroke-width="3"/>
+          </svg>`;
+        case 'sendok': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="26" y="18" width="8" height="34" rx="4" fill="#d1c7ff" transform="rotate(-18 30 30)"/>
+            <ellipse cx="38" cy="18" rx="10" ry="12" fill="#fff5d6" stroke="#f7e7b9"/>
+          </svg>`;
+        case 'sedotan': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="18" width="36" height="6" rx="3" fill="#ffd6e0" transform="rotate(-6 38 21)"/>
+            <rect x="26" y="30" width="20" height="26" rx="6" fill="#cfe9ff"/>
+            <rect x="36" y="18" width="6" height="18" rx="3" fill="#ff7aa2" transform="rotate(-6 39 27)"/>
+          </svg>`;
+        case 'pensil_air': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="18" y="44" width="36" height="18" rx="6" fill="#cbe7ff"/>
+            <rect x="22" y="22" width="28" height="6" rx="3" fill="#ffd6a5" transform="rotate(-12 36 25)"/>
+            <rect x="22" y="28" width="4" height="14" fill="#6b2e00" transform="rotate(-12 24 35)"/>
+          </svg>`;
+        case 'kaca': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="18" width="44" height="36" rx="6" fill="#e9fbff" stroke="#bfe9ff" stroke-width="3"/>
+            <line x1="18" y1="22" x2="44" y2="48" stroke="#d7f0ff" stroke-width="3"/>
+          </svg>`;
+        case 'plastik': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="20" width="40" height="28" rx="6" fill="#fff6e6" stroke="#ffdca3" stroke-width="2"/>
+            <path d="M18 24 Q36 14 54 24" stroke="#ffe9c6" stroke-width="2" fill="none"/>
+          </svg>`;
+        case 'kardus': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="22" width="44" height="28" rx="4" fill="#f0c27b" stroke="#d49a3b"/>
+            <line x1="14" y1="28" x2="58" y2="28" stroke="#d49a3b" stroke-width="2"/>
+          </svg>`;
+        case 'kayu': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="24" width="40" height="24" rx="4" fill="#d9a066" stroke="#b77a3f"/>
+            <path d="M22 30 L50 30" stroke="#b77a3f"/>
+          </svg>`;
+        case 'cd': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="36" r="22" fill="url(#grad)" stroke="#ffc" stroke-width="2"/>
+            <circle cx="36" cy="36" r="6" fill="#fff"/>
+            <defs><linearGradient id="grad" x1="0" x2="1"><stop offset="0%" stop-color="#ffb3c6"/><stop offset="25%" stop-color="#ffd6a5"/><stop offset="50%" stop-color="#cfe9ff"/><stop offset="75%" stop-color="#bde4ff"/><stop offset="100%" stop-color="#d8b3ff"/></linearGradient></defs>
+          </svg>`;
+        case 'prisma': return `
+          <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="18,50 36,18 54,50" fill="#ffdca3" stroke="#ffb703"/>
+            <line x1="36" y1="18" x2="60" y2="34" stroke="#cfe9ff" stroke-width="4"/>
+            <g stroke-width="4"><line x1="60" y1="34" x2="66" y2="26" stroke="#ffb3c6"/><line x1="60" y1="34" x2="66" y2="34" stroke="#ffd6a5"/><line x1="60" y1="34" x2="66" y2="42" stroke="#cfe9ff"/></g>
+          </svg>`;
+        default: return `<svg width="72" height="72"></svg>`;
+      }
+    }
+
+    function createCard(card){
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.draggable = true;
+      el.id = card.id;
+      el.setAttribute('data-prop', card.prop);
+      el.innerHTML = `
+        <div class="thumb">${createSVG(card.icon)}</div>
+        <div class="label">${card.title}</div>
+        <div class="desc">(seret ke kotak)</div>`;
+
+      el.addEventListener('dragstart', e=>{
+        e.dataTransfer.setData('text/plain', card.id);
+        el.classList.add('dragging');
+        setTimeout(()=>el.style.visibility='hidden',60);
+      });
+      el.addEventListener('dragend', e=>{
+        el.classList.remove('dragging');
+        el.style.visibility='';
+      });
+      return el;
+    }
+
+    function createTarget(prop){
+      const container = document.createElement('div');
+      container.className = 'target';
+      container.id = 'target_' + prop.id;
+      container.innerHTML = `
+        <h3>${prop.title}</h3>
+        <div class="slot" aria-label="slot for ${prop.title}"></div>`;
+
+      const slot = container.querySelector('.slot');
+      container.addEventListener('dragover', e=>{ e.preventDefault(); container.style.background='#f0fff5'; });
+      container.addEventListener('dragleave', e=>{ container.style.background=''; });
+      container.addEventListener('drop', e=>{
+        e.preventDefault(); container.style.background='';
+        const cardId = e.dataTransfer.getData('text/plain');
+        const cardEl = document.getElementById(cardId);
+        if(!cardEl) return;
+        const cardProp = cardEl.getAttribute('data-prop');
+        // check
+        if(cardProp === prop.id){
+          // correct
+          placeCard(slot, cardEl, true);
+          playTone(true); showFeedback(true);
+          updateScore(1);
+        } else {
+          // wrong
+          playTone(false); showFeedback(false);
+          // animate wrong
+          const thumb = cardEl.querySelector('.thumb'); if(thumb) thumb.classList.add('wiggle','wrong');
+          setTimeout(()=>{ thumb.classList.remove('wiggle','wrong'); if(bank.contains(cardEl)===false) bank.appendChild(cardEl); }, 400);
+        }
+      });
+      return container;
+    }
+
+    function placeCard(slot, cardEl){
+      const placed = document.createElement('div');
+      placed.className = 'placed celebrate';
+      placed.innerHTML = cardEl.innerHTML;
+      placed.setAttribute('data-origin', cardEl.id);
+      slot.appendChild(placed);
+      if(cardEl.parentElement) cardEl.parentElement.removeChild(cardEl);
+    }
+
+    function playTone(ok){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type='sine'; g.gain.value=0.02; o.frequency.value = ok?880:220; o.start();
+        setTimeout(()=>{ o.stop(); ctx.close(); }, 140);
+      }catch(e){}
+    }
+
+    function showFeedback(ok){
+      feedback.innerHTML = ok ? `<span style="color:var(--good);font-weight:800">Benar! ✅</span>` : `<span class="wrong" style="font-weight:800">Coba lagi ✖</span>`;
+      setTimeout(()=>feedback.textContent = '',700);
+    }
+
+    function updateScore(delta){
+      const cur = Number(scoreEl.textContent);
+      scoreEl.textContent = cur + delta;
+      if(Number(scoreEl.textContent) === cards.length){
+        feedback.innerHTML = '<span style="color:var(--good);font-weight:900">Selamat! Semua benar 🎉</span>';
+      }
+    }
+
+    function setupBoard(){
+      // create targets
+      targetsEl.innerHTML='';
+      properties.forEach(p=> targetsEl.appendChild(createTarget(p)) );
+
+      // shuffle cards
+      shuffle(cards);
+      bank.innerHTML='';
+      cards.forEach(c=> bank.appendChild(createCard(c)) );
+      scoreEl.textContent = '0'; feedback.textContent = '';
+    }
+
+    function shuffle(array){ for(let i=array.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]]; } }
+
+    document.getElementById('resetBtn').addEventListener('click',setupBoard);
+    document.getElementById('shuffleBtn').addEventListener('click',()=>{ shuffle(cards); setupBoard(); });
+    document.getElementById('checkBtn').addEventListener('click', ()=>{
+      const placed = document.querySelectorAll('.placed').length;
+      if(placed !== cards.length){ feedback.innerHTML = `<span class="wrong">Masih ada ${cards.length - placed} yang belum ditempatkan.</span>`; return; }
+      feedback.innerHTML = '<strong>Semua sudah ditempatkan. Bagus!</strong>';
+    });
+
+    // initial setup
+    setupBoard();
+  </script>
+
+
+</body></html>
